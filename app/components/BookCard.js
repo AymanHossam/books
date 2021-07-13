@@ -1,8 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import colors from '../styles/colors';
-import { useBooks } from '../actions/hooks';
 import Card from '../styles/card';
+import {
+  moderateScale,
+  moderateVerticalScale,
+} from 'react-native-size-matters';
 
 const BookCard = ({ book }) => {
   return (
@@ -23,15 +26,15 @@ export default BookCard;
 
 const styles = StyleSheet.create({
   container: {
-    height: 150,
+    height: moderateVerticalScale(160),
     width: '100%',
     backgroundColor: colors.white,
     flexDirection: 'row',
-    padding: 10,
+    padding: moderateScale(10),
   },
   coverContainer: {
     ...Card.container,
-    width: 90,
+    width: moderateScale(90),
     overflow: 'hidden',
     backgroundColor: colors.white,
   },
@@ -40,10 +43,10 @@ const styles = StyleSheet.create({
   },
   details: {
     justifyContent: 'space-around',
-    padding: 10,
+    padding: moderateScale(10),
   },
   title: {
-    fontSize: 16,
+    fontSize: moderateScale(16, 0.3),
     fontWeight: 'bold',
   },
 });

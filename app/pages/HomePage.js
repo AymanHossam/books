@@ -3,6 +3,10 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import colors from '../styles/colors';
 import { useBooks } from '../actions/hooks';
 import { BookCard } from '../components';
+import {
+  moderateVerticalScale,
+  moderateScale,
+} from 'react-native-size-matters';
 
 const HomePage = () => {
   const { status, data, error, isFetching } = useBooks({
@@ -33,10 +37,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    padding: 20,
-    paddingHorizontal: 10,
+    padding: moderateScale(20),
+    paddingHorizontal: moderateScale(10),
   },
   separator: {
-    height: 10,
+    height: moderateVerticalScale(10),
   },
 });
