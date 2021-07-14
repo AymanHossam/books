@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   ImageBackground,
   Text,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import colors from '../styles/colors';
 import {
@@ -17,9 +18,26 @@ import { useRoute } from '@react-navigation/native';
 
 const BookPage = ({ navigation }) => {
   const {
-    params: { book },
+    params: { book = {} },
   } = useRoute();
 
+  const Title = useCallback(
+    ({ title, style }) => (
+      <Text style={[style, book.cover && styles.white]}>{title}</Text>
+    ),
+    [book]
+  );
+
+  const {
+    title,
+    subtitle,
+    authors,
+    subjects,
+    publishers,
+    publish_date,
+    number_of_pages,
+    notes,
+  } = book;
   return (
     <ImageBackground
       style={styles.container}
@@ -27,24 +45,31 @@ const BookPage = ({ navigation }) => {
       blurRadius={5}
     >
       <View style={styles.navbar}>
-        <View style={styles.backContainer}>
-          <TouchableOpacity onPress={() => navigation.pop()}>
-            <Text>Back</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.titleContainer}>
-          <Text
-            style={[styles.headerTitle, !book?.cover && styles.black]}
-            numberOfLines={2}
-          >
-            {book?.title || 'Book'}
-          </Text>
-        </View>
-        <View style={styles.backContainer} />
+        <TouchableOpacity
+          style={styles.backContainer}
+          onPress={() => navigation.pop()}
+        >
+          <Title title={'Back'} />
+        </TouchableOpacity>
       </View>
-      <View style={styles.coverContainer}>
-        <Image style={styles.cover} source={{ uri: book?.cover?.medium }} />
-      </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.subContainer}
+      >
+        <View style={styles.coverContainer}>
+          <Image style={styles.cover} source={{ uri: book?.cover?.medium }} />
+        </View>
+        <View style={styles.detailsContainer}>
+          <Title style={styles.title} title={title} />
+          <Title style={styles.author} title={subtitle} />
+          <Title style={styles.author} title={authors?.[0]?.name} />
+          <Title style={styles.subText} title={subjects?.[0]?.name} />
+          <Title style={styles.subText} title={publishers?.[0]?.name} />
+          <Title style={styles.subText} title={`${number_of_pages} pages`} />
+          <Title style={styles.subText} title={publish_date} />
+          <Title style={styles.subText} title={`"${notes}"`} />
+        </View>
+      </ScrollView>
     </ImageBackground>
   );
 };
@@ -55,27 +80,39 @@ const styles = StyleSheet.create({
   navbar: {
     height: moderateVerticalScale(60),
     alignItems: 'center',
-    justifyContent: 'center',
     width: '100%',
     flexDirection: 'row',
   },
   backContainer: {
     flex: 1,
-    alignItems: 'center',
     paddingHorizontal: moderateScale(20),
   },
-  titleContainer: {
-    flex: 6,
+  detailsContainer: {
+    flex: 1,
+    padding: moderateScale(20),
+    width: '100%',
   },
-  headerTitle: {
-    fontSize: moderateScale(15, 0.3),
-    color: colors.white,
+  title: {
+    fontSize: moderateScale(20, 0.3),
     fontWeight: 'bold',
-    textAlign: 'center',
+  },
+  author: {
+    fontSize: moderateScale(18, 0.3),
+    fontWeight: 'bold',
+    paddingBottom: moderateScale(5),
+  },
+  subText: {
+    fontSize: moderateScale(16, 0.3),
+    paddingBottom: moderateScale(5),
   },
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: colors.white,
+    alignItems: 'center',
+    paddingBottom: moderateScale(50),
+  },
+  subContainer: {
+    flexGrow: 1,
     alignItems: 'center',
   },
   coverContainer: {
@@ -91,7 +128,7 @@ const styles = StyleSheet.create({
   cover: {
     height: '100%',
   },
-  black: {
-    color: colors.black,
+  white: {
+    color: colors.white,
   },
 });
