@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 2,
     backgroundColor: colors.white,
   },
 });
