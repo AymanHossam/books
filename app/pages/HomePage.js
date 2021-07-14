@@ -12,10 +12,13 @@ const HomePage = () => {
   const [searchText, setSearchText] = useState('');
   const [query, setQuery] = useState('');
 
-  const { data = {}, isFetching } = useBooks({
-    bibkeys: query,
-    jscmd: 'data',
-  });
+  const { data = {}, isFetching } = useBooks(
+    {
+      bibkeys: query,
+      jscmd: 'data',
+    },
+    { enabled: !!query }
+  );
 
   //   bibkeys: 'ISBN:0451526538,ISBN:0201558025',
 
