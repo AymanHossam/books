@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, FlatList, TextInput } from 'react-native';
+import { View, StyleSheet, FlatList, TextInput, Text } from 'react-native';
 import colors from '../styles/colors';
 import { useBooks } from '../actions/hooks';
 import { BookCard, LoadingView } from '../components';
@@ -37,6 +37,13 @@ const HomePage = () => {
 
   const renderItem = ({ item }) => <BookCard book={item} />;
   const renderSeparator = () => <View style={styles.separator} />;
+  const renderEmpty = () => {
+    return (
+      <Text style={styles.emptyText}>
+        {query ? 'No book matching the ISBN number(s)' : 'Search for books'}
+      </Text>
+    );
+  };
 
   return (
     <LoadingView containerStyle={styles.container} isLoading={isFetching}>
@@ -54,6 +61,7 @@ const HomePage = () => {
         keyExtractor={item => item.key}
         renderItem={renderItem}
         ItemSeparatorComponent={renderSeparator}
+        ListEmptyComponent={renderEmpty}
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
       />
@@ -77,11 +85,18 @@ const styles = StyleSheet.create({
     height: moderateVerticalScale(40),
     borderRadius: moderateScale(6),
     borderWidth: 0.5,
+    borderColor: colors.gray,
     justifyContent: 'center',
     paddingHorizontal: moderateScale(10),
     marginBottom: moderateScale(10),
   },
   list: {
+    flex: 1,
     paddingVertical: moderateVerticalScale(15),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    color: colors.gray,
   },
 });
