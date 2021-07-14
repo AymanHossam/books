@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, FlatList, TextInput } from 'react-native';
 import colors from '../styles/colors';
 import { useBooks } from '../actions/hooks';
-import { BookCard } from '../components';
+import { BookCard, LoadingView } from '../components';
 import {
   moderateVerticalScale,
   moderateScale,
@@ -12,7 +12,7 @@ const HomePage = () => {
   const [searchText, setSearchText] = useState('');
   const [query, setQuery] = useState('');
 
-  const { data, isFetching } = useBooks({
+  const { data = {}, isFetching } = useBooks({
     bibkeys: query,
     jscmd: 'data',
   });
@@ -35,8 +35,8 @@ const HomePage = () => {
   const renderItem = ({ item }) => <BookCard book={item} />;
   const renderSeparator = () => <View style={styles.separator} />;
 
-  return !isFetching ? (
-    <View style={styles.container}>
+  return (
+    <LoadingView containerStyle={styles.container} isLoading={isFetching}>
       <View style={styles.searchbar}>
         <TextInput
           value={searchText}
@@ -54,9 +54,7 @@ const HomePage = () => {
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
       />
-    </View>
-  ) : (
-    <View />
+    </LoadingView>
   );
 };
 
