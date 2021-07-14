@@ -106,14 +106,14 @@ const styles = StyleSheet.create({
     paddingBottom: moderateScale(5),
   },
   container: {
-    flexGrow: 1,
+    width: '100%',
+    height: '100%',
     backgroundColor: colors.white,
-    alignItems: 'center',
-    paddingBottom: moderateScale(50),
   },
   subContainer: {
     flexGrow: 1,
     alignItems: 'center',
+    width: '100%',
   },
   coverContainer: {
     ...Card.container,
