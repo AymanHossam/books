@@ -11,7 +11,7 @@ const BookCard = ({ book }) => {
   return (
     <View style={styles.container}>
       <View style={styles.coverContainer}>
-        <Image style={styles.cover} source={{ uri: book?.cover.medium }} />
+        <Image style={styles.cover} source={{ uri: book?.cover?.medium }} />
       </View>
       <View style={styles.details}>
         <Text style={styles.title}>{book?.title}</Text>
@@ -30,7 +30,8 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: colors.white,
     flexDirection: 'row',
-    padding: moderateScale(10),
+    paddingVertical: moderateScale(10),
+    marginLeft: moderateScale(5),
   },
   coverContainer: {
     ...Card.container,
