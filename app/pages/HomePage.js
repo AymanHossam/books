@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { View, StyleSheet, FlatList, TextInput, Text } from 'react-native';
 import colors from '../styles/colors';
 import { useBooks } from '../actions/hooks';
@@ -7,6 +7,7 @@ import {
   moderateVerticalScale,
   moderateScale,
 } from 'react-native-size-matters';
+import { useDebouncedEffect } from '../hooks';
 
 const HomePage = () => {
   const [searchText, setSearchText] = useState('');
@@ -22,50 +23,54 @@ const HomePage = () => {
 
   //   bibkeys: 'ISBN:0451526538,ISBN:0201558025',
 
-  const onChangeText = value => {
-    setSearchText(value.replace(/\D/g, ','));
-  };
-
   const processQuery = () => {
     const isbnArray = searchText.split(' ');
     const queryValue = isbnArray.reduce(
-      (value, isbn) => (value += `ISBN:${isbn},`),
+      (value, isbn) => (value += isbn ? `ISBN:${isbn},` : ''),
       ''
     );
     setQuery(queryValue);
+  };
+
+  useDebouncedEffect(processQuery, [searchText], 500);
+
+  const onChangeText = value => {
+    setSearchText(value.replace(/\D/g, ' '));
   };
 
   const renderItem = ({ item }) => <BookCard book={item} />;
   const renderSeparator = () => <View style={styles.separator} />;
   const renderEmpty = () => {
     return (
-      <Text style={styles.emptyText}>
-        {query ? 'No book matching the ISBN number(s)' : 'Search for books'}
-      </Text>
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>
+          {query ? 'No book matching the ISBN number(s)' : 'Search for books'}
+        </Text>
+      </View>
     );
   };
-
   return (
-    <LoadingView containerStyle={styles.container} isLoading={isFetching}>
+    <View style={styles.container}>
       <View style={styles.searchbar}>
         <TextInput
           value={searchText}
           onChangeText={onChangeText}
           keyboardType="numeric"
           placeholder="Search.."
-          onSubmitEditing={processQuery}
         />
       </View>
-      <FlatList
-        data={Object.values(data)}
-        keyExtractor={item => item.key}
-        renderItem={renderItem}
-        ItemSeparatorComponent={renderSeparator}
-        ListEmptyComponent={renderEmpty}
-        contentContainerStyle={styles.list}
-        showsVerticalScrollIndicator={false}
-      />
-    </LoadingView>
+      <LoadingView containerStyle={styles.listContainer} isLoading={isFetching}>
+        <FlatList
+          data={Object.values(data)}
+          keyExtractor={item => item.key}
+          renderItem={renderItem}
+          ItemSeparatorComponent={renderSeparator}
+          ListEmptyComponent={renderEmpty}
+          contentContainerStyle={styles.list}
+          showsVerticalScrollIndicator={false}
+        />
+      </LoadingView>
+    </View>
   );
 };
 
@@ -77,6 +82,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     paddingTop: moderateScale(20),
     paddingHorizontal: moderateScale(15),
+  },
+  listContainer: {
+    flex: 1,
   },
   separator: {
     height: moderateVerticalScale(10),
@@ -91,10 +99,13 @@ const styles = StyleSheet.create({
     marginBottom: moderateScale(10),
   },
   list: {
-    flex: 1,
+    flexGrow: 1,
     paddingVertical: moderateVerticalScale(15),
-    justifyContent: 'center',
     alignItems: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
   },
   emptyText: {
     color: colors.gray,
