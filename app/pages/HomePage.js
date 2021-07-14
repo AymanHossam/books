@@ -57,6 +57,8 @@ const HomePage = () => {
           onChangeText={onChangeText}
           keyboardType="numeric"
           placeholder="Search.."
+          placeholderTextColor={colors.black}
+          style={styles.input}
         />
       </View>
       <LoadingView containerStyle={styles.listContainer} isLoading={isFetching}>
@@ -109,5 +111,8 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     color: colors.gray,
+  },
+  input: {
+    color: colors.black,
   },
 });
