@@ -3,7 +3,7 @@ import { SafeAreaView, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import colors from './styles/colors';
-import { HomePage } from './pages';
+import { BookPage, HomePage } from './pages';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 const queryClient = new QueryClient();
@@ -20,6 +20,11 @@ const Books = () => {
               name="Home"
               component={HomePage}
               options={{ title: 'Books' }}
+            />
+            <Stack.Screen
+              name="Book"
+              component={BookPage}
+              options={{ headerShown: false }}
             />
           </Stack.Navigator>
         </NavigationContainer>
